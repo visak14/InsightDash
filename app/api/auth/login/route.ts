@@ -19,7 +19,11 @@ export async function POST(request: Request) {
     await login(userWithoutPassword);
 
     return NextResponse.json({ message: 'Logged in', user: userWithoutPassword });
-  } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Login Error:', error);
+    return NextResponse.json({ 
+      error: error.message || 'Internal Server Error',
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }, { status: 500 });
   }
 }
